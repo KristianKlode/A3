@@ -147,12 +147,12 @@ int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
-  dev = device_get(TYPECODE_TTY, 0);
+  dev = device_get(TYPECODE_TTY, fd);
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
   if (fd == 0) {
-    gcd->read(fd, *buf, len);
+    gcd->read(gcd, *buf, len);
     return len;
   }
   else {
@@ -168,7 +168,7 @@ int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
   if ((fd == 1) | (fd == 2)) {
-    gcd->write(fd, *buf, len);
+    gcd->write(gcd, *buf, len);
     return len;
   } 
   else {
