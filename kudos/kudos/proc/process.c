@@ -143,7 +143,7 @@ void process_start(const char *path)
   thread_goto_userland(&user_context);
 }
 
-int syscall_read(int fd, void *buf, size_t nbytes){
+int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
@@ -159,7 +159,7 @@ int syscall_read(int fd, void *buf, size_t nbytes){
     return -3;
   }
 }
-int syscall_write(int fd, void const *buf, size_t nbytes){
+int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
