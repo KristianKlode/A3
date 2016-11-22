@@ -48,6 +48,3 @@ Thumbs.db
 
 
 # Stuff from virtualenv
-bin/
-include/
-lib/
