@@ -152,11 +152,7 @@ int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
   if (fd == 0) {
-<<<<<<< HEAD
-    gcd->read(fd, (const void) buf, len);
-=======
-    gcd->read(gcd, *buf, len);
->>>>>>> 4ad59eb96b0bc6dfbb4d6ff7592c9333d8f9a0ab
+    gcd->read(fd, buf, len);
     return len;
   }
   else {
@@ -172,12 +168,8 @@ int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
   if ((fd == 1) | (fd == 2)) {
-<<<<<<< HEAD
-    gcd->write(fd, *buf, len);
-=======
-    gcd->write(gcd, *buf, len);
->>>>>>> 4ad59eb96b0bc6dfbb4d6ff7592c9333d8f9a0ab
-    return len;
+    gcd->write(gcd, buf, len);
+  return len;
   }
   else {
     return -3;
