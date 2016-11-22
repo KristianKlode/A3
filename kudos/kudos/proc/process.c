@@ -143,34 +143,34 @@ void process_start(const char *path)
   thread_goto_userland(&user_context);
 }
 
-int syscall_read(int fd, void *buf, size_t nbytes){
+int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
-  dev = device_get(TYPECODE_TTY, 0);
+  dev = device_get(TYPECODE_TTY, fd);
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
   if (fd == 0) {
-    gcd->read(fd, *buf, len);
+    gcd->read(fd, (const void) buf, len);
     return len;
   }
   else {
     return -3;
   }
 }
-int syscall_write(int fd, void const *buf, size_t nbytes){
+int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
-  dev = device_get(TYPECODE_TTY, 0);
+  dev = device_get(TYPECODE_TTY, fd);
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
-  if (fd == 1 | fd == 2) {
+  if ((fd == 1) | (fd == 2)) {
     gcd->write(fd, *buf, len);
     return len;
-  } 
+  }
   else {
     return -3;
   }
