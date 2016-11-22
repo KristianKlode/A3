@@ -167,7 +167,7 @@ int syscall_write(int fd, void const *buf, uint64_t nbytes){
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
-  if (fd == 1 | fd == 2) {
+  if ((fd == 1) | (fd == 2)) {
     gcd->write(fd, *buf, len);
     return len;
   } 
