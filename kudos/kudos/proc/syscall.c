@@ -7,6 +7,7 @@
 #include "lib/libc.h"
 #include "kernel/assert.h"
 #include "vm/memory.h"
+#include "proc/process.h"
 
 /// Handle system calls. Interrupts are enabled when this function is
 /// called.
