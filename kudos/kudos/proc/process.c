@@ -147,7 +147,7 @@ int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
-  dev = device_get(TYPECODE_TTY, fd);
+  dev = device_get(TYPECODE_TTY, 0);
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
@@ -163,7 +163,7 @@ int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
   int len = nbytes;
-  dev = device_get(TYPECODE_TTY, fd);
+  dev = device_get(TYPECODE_TTY, 0);
   KERNEL_ASSERT(dev != NULL);
   gcd = (gcd_t *)dev->generic_device;
   KERNEL_ASSERT(gcd != NULL);
