@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Run YAMS with the KUDOS MIPS kernel with a specific `initprog` program.  You
+# must still have `yams-term` running in another terminal window.
+#
+# Usage: yams-init <program> [<disk>]
+
+set -e # Exit on first error.
+
+DIR=$(dirname "$(readlink -f "$0")")
+
+(test -d kudos && test -d userland) || \
+    (echo "error: missing directories 'kudos' and/or 'userland'"; exit 1)
+
+prog="$1.mips32"
+disk="$2"
+if ! [ "$disk" ]; then
+    disk=store.file
+fi
+
+vname="$(./kudos/util/tfstool list "$disk" \
+    | grep -Po '(?<=volume name: )[^,]+')"
+
+if echo "$prog" | grep -qv '^\['; then
+    prog="[$vname]$prog"
+fi
+
+echo quit | "$DIR/yams-sim" kudos/kudos-mips32 initprog="$prog" \
+    | grep -E '(Running time|Actual performance|Simulated second length)' \
+    | sed -r 's/^ +//'
