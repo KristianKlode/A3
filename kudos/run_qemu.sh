@@ -36,7 +36,7 @@ menuentry \"kudos\" {
    boot
 }" >> ./qemu/grub/iso/boot/grub/grub.cfg
 
-grub-mkrescue -o "$iso_path" "./qemu/grub/iso"
+grub-mkrescue -o "$iso_path" "./qemu/grub/iso" -p "./grub"
 
 qemu-system-x86_64 \
   -gdb tcp::1234    \
