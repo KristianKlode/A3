@@ -5,6 +5,8 @@
 
 #include "lib/types.h"
 #include "vm/memory.h"
+#include "kernel/thread.h"
+#include "kernel/types.h"
 
 #define PROCESS_PTABLE_FULL  (-1)
 #define PROCESS_ILLEGAL_JOIN (-2)
@@ -14,8 +16,6 @@
 #define PROCESS_MAX_FILELENGTH (256)
 #define PROCESS_MAX_PROCESSES  (128)
 #define PROCESS_MAX_FILES      (10)
-
-typedef int pid_t;
 
 enum process_state {FREE, TAKEN, WAIT};
 
@@ -27,8 +27,9 @@ typedef struct {
   TID_t tid;
 } pcb_t;
 
-void process_start(const char *path);
+void process_start(TID_t tid);
 int syscall_read(int fd, void *buf, uint64_t nbytes);
 int syscall_write(int fd, void const *buf, uint64_t nbytes);
+
 
 #endif // KUDOS_PROC_PROCESS_H

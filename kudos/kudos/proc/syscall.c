@@ -39,7 +39,12 @@ uintptr_t syscall_entry(uintptr_t syscall,
   case SYSCALL_WRITE:
     syscall_write(arg0, arg1, arg2);
     break;
-
+  case SYSCALL_SPAWN:
+    process_spawn(arg0, arg1);
+    break;
+  case SYSCALL_GETPID:
+    process_get_current_process();
+    break;
   default:
     KERNEL_PANIC("Unhandled system call\n");
   }

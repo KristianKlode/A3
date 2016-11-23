@@ -126,58 +126,7 @@ void process_init(void){
   }
 }
 
-/// Load and run the executable as a new process in a new thread.
-/// Arguments: Path to the executable and
-///            flags specifying the desired level of sharing.
-/// Returns the process ID of the new process.
-
-int pid_counter = 0;
-
-pid_t process_spawn(char const *path, int flags){
-  char s[200];
-  int i = 0;
-  klock_t pid_lock;
-  klock_init(&pid_lock);
-  klock_status_t pid_lock_status;
-  for (i = 0; i!="\0"; i++) {
-    s[i] = path[i];
-  }
-  s[i] = "\0";
-  pid_lock_status = klock_lock(pid_lock);
-  while (1){
-    for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
-      if (process_table[i].state == FREE) {
-        process_table[i].state = WAIT;
-        goto done;
-      }
-    }
-  }
-  done:
-  process_table[i].pid = pid_counter++;
-  klock_open(pid_lock, pid_lock_status);
-  process_table[i].path = s;
-  process_table[i].state = TAKEN;
-  TID_t new_thread = thread_create(process_start, pid);
-  thread_run(new_thread)
-}
-
-/// Return PID of current process.
-pid_t process_get_current_process(void){
-  tid = thread_get_current_thread;
-  for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
-    if (process_table[i].tid == tid){
-      return(process_table[i].pid) 
-    }
-  return -4
-}  
-
-
-/// Return PCB of current process.
-pcb_t *process_get_current_process_entry(void){
-}
-
-
-void process_start(int *tid)
+void process_start(TID_t tid)
 {
   char path[256];
   virtaddr_t entry_point;
@@ -189,6 +138,7 @@ void process_start(int *tid)
       path == process_table[i].path;
       break;
     }
+  }
   ret = setup_new_process(tid, path,
                           &entry_point, &stack_top);
   if (ret != 0) {
@@ -204,6 +154,72 @@ void process_start(int *tid)
 
   thread_goto_userland(&user_context);
 }
+
+/// Load and run the executable as a new process in a new thread.
+/// Arguments: Path to the executable and
+///            flags specifying the desired level of sharing.
+/// Returns the process ID of the new process.
+
+int pid_counter = 0;
+
+pid_t process_spawn(char const *path, int flags){
+  char s[200];
+  flags = flags;
+  int i = 0;
+  pid_t pid;
+  klock_t pid_lock;
+  klock_init(&pid_lock);
+  klock_status_t pid_lock_status;
+  for (i = 0; path[i] != '\0'; i++) {
+    s[i] = path[i];
+  }
+  s[i] = '\0';
+  pid_lock_status = klock_lock(&pid_lock);
+  while (1){
+    for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+      if (process_table[i].state == FREE) {
+        process_table[i].state = WAIT;
+        goto done;
+      }
+    }
+  }
+  done:
+  pid = pid_counter++;
+  process_table[i].pid = pid;
+  klock_open(&pid_lock, &pid_lock_status);
+  process_table[i].path = *s;
+  process_table[i].state = TAKEN;
+  TID_t new_thread = thread_create(process_start, pid_counter);
+  thread_run(new_thread);
+  return(pid);
+}
+
+/// Return PID of current process.
+pid_t process_get_current_process(void){
+  TID_t tid = thread_get_current_thread;
+  for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+    if (process_table[i].tid == tid){
+      return(process_table[i].pid);
+    }
+  return -4;
+  }
+}
+
+
+/// Return PCB of current process.
+pcb_t *process_get_current_process_entry(void){
+TID_t tid = thread_get_current_thread;
+for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+  if (process_table[i].tid == tid){
+    pcb_t pcb = process_table[i];
+    return &process_table;
+  }
+return -4;
+}
+}
+
+
+
 
 int syscall_read(int fd, void *buf, uint64_t nbytes){
   gcd_t *gcd;
@@ -221,6 +237,7 @@ int syscall_read(int fd, void *buf, uint64_t nbytes){
     return -3;
   }
 }
+
 int syscall_write(int fd, void const *buf, uint64_t nbytes){
   gcd_t *gcd;
   device_t *dev;
