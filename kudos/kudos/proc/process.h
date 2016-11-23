@@ -9,6 +9,7 @@
 #define PROCESS_PTABLE_FULL  (-1)
 #define PROCESS_ILLEGAL_JOIN (-2)
 #define PROCESS_ERROR_FILEHANDLER (-3)
+#define PROCESS_ERROR_NO_SUCH_PROCESS (-4)
 
 #define PROCESS_MAX_FILELENGTH (256)
 #define PROCESS_MAX_PROCESSES  (128)
@@ -23,6 +24,7 @@ typedef struct {
   enum process_state state;
   pid_t pid;
   char path;
+  TID_t tid;
 } pcb_t;
 
 void process_start(const char *path);

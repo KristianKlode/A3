@@ -153,34 +153,44 @@ pid_t process_spawn(char const *path, int flags){
     }
   }
   done:
-  process_table[i].path = s;
   process_table[i].pid = pid_counter++;
   klock_open(pid_lock, pid_lock_status);
+  process_table[i].path = s;
   process_table[i].state = TAKEN;
+  TID_t new_thread = thread_create(process_start, pid);
+  thread_run(new_thread)
 }
 
 /// Return PID of current process.
-pid_t process_get_current_process(void);
-
+pid_t process_get_current_process(void){
+  tid = thread_get_current_thread;
+  for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+    if (process_table[i].tid == tid){
+      return(process_table[i].pid) 
+    }
+  return -4
+}  
 
 
 /// Return PCB of current process.
-pcb_t *process_get_current_process_entry(void);
+pcb_t *process_get_current_process_entry(void){
+}
 
 
-
-void process_start(const char *path)
+void process_start(int *tid)
 {
-  TID_t my_thread;
+  char path[256];
   virtaddr_t entry_point;
   int ret;
   context_t user_context;
   virtaddr_t stack_top;
-
-  my_thread = thread_get_current_thread();
-  ret = setup_new_process(my_thread, path,
+  for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+    if (process_table[i].tid == tid){
+      path == process_table[i].path;
+      break;
+    }
+  ret = setup_new_process(tid, path,
                           &entry_point, &stack_top);
-
   if (ret != 0) {
     return; /* Something went wrong. */
   }
