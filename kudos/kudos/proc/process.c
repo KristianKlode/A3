@@ -152,11 +152,13 @@ pid_t process_spawn(char const *path, int flags){
       }
     }
   }
-  done: klock_open(pid_lock, pid_lock_status);
+  done:
   process_table[i].path = s;
   process_table[i].pid = pid_counter++;
+  klock_open(pid_lock, pid_lock_status);
   process_table[i].state = TAKEN;
 }
+
 /// Return PID of current process.
 pid_t process_get_current_process(void);
 
