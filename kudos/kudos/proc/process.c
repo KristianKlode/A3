@@ -117,6 +117,21 @@ int setup_new_process(TID_t thread,
   return 0;
 }
 
+/// Initialize process table.
+/// Should be called during boot.
+void process_init(void);
+/// Load and run the executable as a new process in a new thread.
+/// Arguments: Path to the executable and
+///            flags specifying the desired level of sharing.
+/// Returns the process ID of the new process.
+pid_t process_spawn(char const *path, int flags);
+
+/// Return PID of current process.
+pid_t process_get_current_process(void);
+
+/// Return PCB of current process.
+pcb_t *process_get_current_process_entry(void);
+
 void process_start(const char *path)
 {
   TID_t my_thread;
