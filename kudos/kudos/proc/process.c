@@ -12,12 +12,13 @@
 #include "vm/memory.h"
 #include "drivers/device.h"
 #include "drivers/gcd.h"
+#include "kernel/klock.h"
 
 
 
 extern void process_set_pagetable(pagetable_t*);
 
-pcb_t process_table[PROCESS_MAX_PROCESSES];	
+pcb_t process_table[PROCESS_MAX_PROCESSES];
 
 /* Return non-zero on error. */
 int setup_new_process(TID_t thread,
@@ -129,13 +130,35 @@ void process_init(void){
 /// Arguments: Path to the executable and
 ///            flags specifying the desired level of sharing.
 /// Returns the process ID of the new process.
+
+pid_counter = 0;
+
 pid_t process_spawn(char const *path, int flags);
-
-
-
+  flags = flags;
+  char s[200];
+  klock_t pid_lock;
+  klock.init(&pid_lock);
+  klock_status_t pid_lock_status;
+  for (i = 0; i!="\0"; i++) {
+    s[i] = path[i];
+  }
+  s[i] = "\0"
+  pid_lock_status = klock_lock(pid_lock);
+  while 1{
+    for (i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+      if (process_table[i].state == FREE) {
+        process_table[i].state = WAIT;
+        goto done;
+      }
+    }
+  }
+  done: klock_open(pid_lock, pid_lock_status);
+  process_table[i].path = s;
+  process_table[i].pid = pid_counter++;
+  process_table[i].state = TAKEN;
 /// Return PID of current process.
 pid_t process_get_current_process(void);
-
+  
 
 
 /// Return PCB of current process.
