@@ -155,7 +155,7 @@ pid_t process_spawn(char const *path, int flags);
   done:
   process_table[i].path = s;
   process_table[i].pid = pid_counter++;
-  nklock_open(pid_lock, pid_lock_status);
+  klock_open(pid_lock, pid_lock_status);
   process_table[i].state = TAKEN;
   
 /// Return PID of current process.
