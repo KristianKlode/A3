@@ -121,7 +121,7 @@ int setup_new_process(TID_t thread,
 /// Initialize process table.
 /// Should be called during boot.
 void process_init(void){
-  for (i=0; i<PROCESS_MAX_PROCESSES; i++){
+  for (int i=0; i<PROCESS_MAX_PROCESSES; i++){
     process_table[i].state = FREE;
   }
 }
@@ -131,21 +131,21 @@ void process_init(void){
 ///            flags specifying the desired level of sharing.
 /// Returns the process ID of the new process.
 
-pid_counter = 0;
+int pid_counter = 0;
 
-pid_t process_spawn(char const *path, int flags);
-  flags = flags;
+pid_t process_spawn(char const *path, int flags){
   char s[200];
+  int i = 0;
   klock_t pid_lock;
-  klock.init(&pid_lock);
+  klock_init(&pid_lock);
   klock_status_t pid_lock_status;
   for (i = 0; i!="\0"; i++) {
     s[i] = path[i];
   }
-  s[i] = "\0"
+  s[i] = "\0";
   pid_lock_status = klock_lock(pid_lock);
-  while 1{
-    for (i = 0; i < PROCESS_MAX_PROCESSES; i++) {
+  while (1){
+    for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
       if (process_table[i].state == FREE) {
         process_table[i].state = WAIT;
         goto done;
@@ -156,9 +156,10 @@ pid_t process_spawn(char const *path, int flags);
   process_table[i].path = s;
   process_table[i].pid = pid_counter++;
   process_table[i].state = TAKEN;
+}
 /// Return PID of current process.
 pid_t process_get_current_process(void);
-  
+
 
 
 /// Return PCB of current process.
