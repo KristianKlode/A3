@@ -22,6 +22,7 @@ typedef struct {
   // TODO: Define a pid namespace here.
   enum process_state state;
   pid_t pid;
+  char path;
 } pcb_t;
 
 void process_start(const char *path);
