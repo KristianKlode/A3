@@ -16,8 +16,11 @@
 
 typedef int pid_t;
 
+enum process_state {FREE, TAKEN, WAIT};
+
 typedef struct {
   // TODO: Define a pid namespace here.
+  enum process_state state;
   pid_t pid;
 } pcb_t;
 

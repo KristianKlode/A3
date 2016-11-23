@@ -17,7 +17,7 @@
 
 extern void process_set_pagetable(pagetable_t*);
 
-pcb_t process_table[PROCESS_MAX_PROCESSES];
+pcb_t process_table[PROCESS_MAX_PROCESSES];	
 
 /* Return non-zero on error. */
 int setup_new_process(TID_t thread,
@@ -119,18 +119,29 @@ int setup_new_process(TID_t thread,
 
 /// Initialize process table.
 /// Should be called during boot.
-void process_init(void);
+void process_init(void){
+  for (i=0; i<PROCESS_MAX_PROCESSES; i++){
+    process_table[i].state = FREE;
+  }
+}
+
 /// Load and run the executable as a new process in a new thread.
 /// Arguments: Path to the executable and
 ///            flags specifying the desired level of sharing.
 /// Returns the process ID of the new process.
 pid_t process_spawn(char const *path, int flags);
 
+
+
 /// Return PID of current process.
 pid_t process_get_current_process(void);
 
+
+
 /// Return PCB of current process.
 pcb_t *process_get_current_process_entry(void);
+
+
 
 void process_start(const char *path)
 {
