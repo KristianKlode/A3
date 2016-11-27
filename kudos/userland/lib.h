@@ -41,6 +41,7 @@ uint32_t _syscall(uint64_t syscall_num, uint64_t a1, uint64_t a2, uint64_t a3);
 void syscall_halt(void);
 
 int syscall_spawn(const char *path, int flags);
+int syscall_getpid();
 int syscall_join(int pid);
 void syscall_exit(int retval);
 

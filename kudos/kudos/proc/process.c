@@ -219,7 +219,7 @@ pid_t process_get_current_process(void){
       if (process_table[i].fakepid != -1){
         return(process_table[i].fakepid);
       }
-      else{ 
+      else{
         return(process_table[i].pid);
       }
     }
