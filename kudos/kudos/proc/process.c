@@ -164,12 +164,23 @@ int pid_counter = 0;
 
 pid_t process_spawn(char const *path, int flags){
   char s[200];
-  flags = flags;
+  int legal_flags[] = {0x1};
   int i = 0;
+  int j = 0;
   pid_t pid;
+  pid_t fakepid;
+  int do_fakepid = 0;
+  int flag_check = 0;
   klock_t pid_lock;
   klock_init(&pid_lock);
   klock_status_t pid_lock_status;
+  switch (flags) {
+    case 0x1 :
+      do_fakepid = 1;
+      break;
+    default:
+      return(-5);
+  }
   for (i = 0; path[i] != '\0'; i++) {
     s[i] = path[i];
   }
@@ -186,6 +197,12 @@ pid_t process_spawn(char const *path, int flags){
   done:
   pid = pid_counter++;
   process_table[i].pid = pid;
+  if (do_fakepid == 0) {
+    process_table[i].fakepid = -1;
+  }
+  else {
+  process_table[i].fakepid = 0;
+  }
   klock_open(&pid_lock, &pid_lock_status);
   process_table[i].path = *s;
   process_table[i].state = TAKEN;
@@ -199,7 +216,12 @@ pid_t process_get_current_process(void){
   TID_t tid = thread_get_current_thread;
   for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
     if (process_table[i].tid == tid){
-      return(process_table[i].pid);
+      if (process_table[i].fakepid != -1){
+        return(process_table[i].fakepid);
+      }
+      else{ 
+        return(process_table[i].pid);
+      }
     }
   return -4;
   }
@@ -212,7 +234,7 @@ TID_t tid = thread_get_current_thread;
 for (int i = 0; i < PROCESS_MAX_PROCESSES; i++) {
   if (process_table[i].tid == tid){
     pcb_t pcb = process_table[i];
-    return &process_table;
+    return &process_table[i];
   }
 return -4;
 }

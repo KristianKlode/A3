@@ -16,8 +16,6 @@ uintptr_t syscall_entry(uintptr_t syscall,
 {
   uintptr_t retval = 0;
 
-  // arg0, arg1, and arg2 are unused (for now). Remove this when they do get
-  // used below.
   arg0 = arg0;
   arg1 = arg1;
   arg2 = arg2;
@@ -45,6 +43,10 @@ uintptr_t syscall_entry(uintptr_t syscall,
   case SYSCALL_GETPID:
     process_get_current_process();
     break;
+/*  case SPAWN_NEWPIDNS:
+    int flags = [0x1];
+    process_spawn(arg0, flags);
+    break;*/
   default:
     KERNEL_PANIC("Unhandled system call\n");
   }
