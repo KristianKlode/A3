@@ -175,6 +175,8 @@ pid_t process_spawn(char const *path, int flags){
   klock_init(&pid_lock);
   klock_status_t pid_lock_status;
   switch (flags) {
+    case 0 :
+      break;
     case 0x1 :
       do_fakepid = 1;
       break;
